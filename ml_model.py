@@ -1,16 +1,8 @@
-# Ignore warnings
-import warnings
-warnings.filterwarnings('ignore')
-
-
 # Handle table-like data and matrices
-import numpy as np
 import pandas as pd
-import math 
-
+import numpy as np
 
 # Modelling Algorithms
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
 import pickle
@@ -22,15 +14,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator,TransformerMixin
 from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 
-
-pd.set_option('max_columns', None)
-pd.set_option('max_rows', None)
-
-
-# Fixing Missing Values
-
- # the data will need alot of cleaning maybe not so much 
-# let get started
 
 # Function to calculate missing values by column
 def missing_values_table(df):
@@ -63,6 +46,7 @@ def missing_values_table(df):
     # Return the dataframe with missing information
     return mis_val_table_ren_columns, mis_val_table_ren_columns.index
 
+########## Fix detected missing values ############
 
 def fix_missing(df, column):
     """
@@ -75,6 +59,22 @@ def fix_missing(df, column):
             df[col] = df[col].fillna(df[col].median())
         else:
             df[col] = df[col].fillna('No Data')
+
+############### Function to convert object type to interger type ############
+def encode_categorical_to_integer(data, columns):
+    """
+    convert or change onject datatype into integers
+    for modelling
+    Function takse 2 arguments 
+    data : dataframe that contains column(s) of type object
+    columns: a list of columns that are of type object
+    the funtion does not return object, it does it computation implicitly
+    """
+    from sklearn.preprocessing import LabelEncoder
+    for col in columns:
+        encoder = LabelEncoder()
+        data[col] = encoder.fit_transform(data[col])
+
 
 
 # Read the data
@@ -95,6 +95,14 @@ train = train[train['Open'] != 0]
 # specify the numeric columns we dont want to transform
 # numeric_columns=numerical_columns
 class myTransformer():
+    """
+    A pipeline class that fit the feature transform and make them ready for training and prediction
+    Fix missing values using the function fix_missing()
+    Encode Categorical Datatype to an Integer
+    Extract Features from Date and generate more Features
+    Normalized the data using Normalier()
+
+    """
     def __init__(self):
         print('Initializing Binarizer......\n')
         # initialize all binarizer variables
@@ -141,8 +149,7 @@ class myTransformer():
         encode_categorical_to_integer(input_data, ['StoreType', 'Assortment']) 
 
         print('Data Transformed.... Up Next\n')
-        
-        
+    
         # Drop Redundancy Columns
         print('Drop Unneccesary Columns..\n')
         columns_to_drop = [ 'Id', 'SalesPerCustomer', 'Customers', 'Date', 'PromoInterval',
@@ -164,36 +171,35 @@ class myTransformer():
         print('Done!!!! Pipeline process completed')
         return input_data
 
-# Since it a sales prediction and it a continuous type of data using Root Mean Squared Error would be appropriete
-def rmsle(true, pred):
-    """Loss functions indicate how well our model is performing. This means that the loss 
-        functions affect the overall output of sales prediction.  
-        Different loss functions have different use cases. 
-        true: actual prediction
-        pred: model prediciton
-        returns error value
-        """
-    from sklearn.metrics import mean_squared_error
-    return np.sqrt(mean_squared_error(true, pred))
-
-
-# Separate target from features
-train_features = train.drop('Sales', axis=1)
-target = np.log(train['Sales'])
-test = test
-
-
 ######## Predict Sale #######
 def predict_sales(data, model):
     if type(data) == dict:
         df = pd.DataFrame(data)
     else:
-        df = pd.DataFrame(data)
+        df = data
     pipeline = myTransformer()
     pipeline.fit(df)
     prepared_df = pipeline.transform(df)
     prediction = model.predict(prepared_df)
     prediction = np.exp(prediction)
+    print('prediction is ready')
     return prediction
 
 
+############## Plot Forecast ###############
+
+def plot_trend(data, prediction):
+    import matplotlib.pyplot as plt
+    data['prediction'] = pd.Series(prediction)
+    date_sales = pd.concat([data['prediction'], data['Date']], axis=1)
+    date_sales['Date'] = pd.to_datetime(date_sales['Date'])
+    date_sales = date_sales.set_index('Date')
+    fig, ax = plt.subplots(figsize=(18, 8))
+    month_plot = date_sales.resample('D').sum()
+    ax.plot(month_plot)
+    ax.set_title('Trend of Predicted Sales by Day', size=25)
+    plt.xticks(rotation=45, fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.xlabel('Date', fontsize=18)
+    plt.ylabel('Average Sales per Day', fontsize=18)
+    plt.show()
