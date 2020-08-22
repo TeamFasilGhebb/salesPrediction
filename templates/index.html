@@ -1,17 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 20 19:10:04 2020
-
-@author: kiiru
-"""
-
-
 <!DOCTYPE html>
 <html >
 <!--From https://codepen.io/frytyler/pen/EGdtg-->
 <head>
   <meta charset="UTF-8">
-  <title>ML API</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width = device-width, initial-scale = 1">
+  <title>Sales Prediction API</title>
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
@@ -20,24 +15,99 @@ Created on Thu Aug 20 19:10:04 2020
 </head>
 
 <body>
- <div class="login">
-	<h1>Predict Salary Analysis</h1>
+    <div class="container">
+    <div class="page-header">
+    	<h1>Sales Prediction</h1>
+        <div class="jumbotron">
+         <!-- Main Input For Receiving Query to our ML -->
+        <form action="{{ url_for('predict')}}"method="post">
+            <div class="form-row">
+            <div class="col-sm-2">
+            <div class="form-group">
+                <label for="Store" class="control-label">Enter Store ID:</label>
+                <div class="col-sm-10">
+                    <input type="number" min="1" max="1115" name="Store"  required="required" />
+                </div>
+            </div>
+            </div>
+            <div class="col-sm-7">
+            <div class="form-group">
+                <label for="DayOfWeek" class="control-label">Which day of the week do you want to predict:</label>
+                <div class="col-sm-10">
+                    <input type="radio" id="monday" name="DayOfWeek" required="required" value="1" /> Monday
+                    <input type="radio" id="tuesday" name="DayOfWeek" required="required" value="2" /> Tuesday
+                    <input type="radio" id="wednesday" name="DayOfWeek" required="required" value="3" /> Wednesday
+                    <input type="radio" id="thursday" name="DayOfWeek" required="required" value="4" /> Thursday
+                    <input type="radio" id="friday" name="DayOfWeek" required="required" value="5" /> Friday
+                    <input type="radio" id="saturday" name="DayOfWeek" required="required" value="6" /> Saturday
+                    <input type="radio" id="sunday" name="DayOfWeek" required="required" value="7" /> Sunday
+                </div>
+            </div>
+            </div>
+            <div class="col-sm-3">
+            <div class="form-group">
+                <label for="Date" class="control-label">Date of prediction:</label>
+                <div class="col-sm-10">
+            		<input type="date" name="Date" required="required" /> <br>
+            	</div>
+        	</div>
+        		<input type="hidden" name="Open" value="1" required="required" />
+        	</div>
+        	</div>
+        	<div class="form-row">
+        	<div class="col-sm-2">
+        	<div class="form-group">
+                <label for="promo" class="control-labe">Promotion day?</label>
+                <div class="col-sm-10">
+            		<input type="radio" name="promo" id="yes" value="1" required="required" /> Yes
+                    <input type="radio" name="promo" id="no" value="0" required="required" /> No
+                </div>
+            </div>
+            </div>
+            <div class="col-sm-7">
+            <div class="form-group">
+                <label for="stateholiday" class="control-label">State Holiday?</label>
+                <div class="col-sm-10">
+            		<input type="radio" id="none" name="stateholiday" value="0" required="required" /> None
+                    <input type="radio" id="public" name="stateholiday" value="a" required="required" /> Public Holiday
+                    <input type="radio" id="easter" name="stateholiday" value="b" required="required" /> Easter Holiday
+                    <input type="radio" id="xmas" name="stateholiday" value="c" required="required" /> Christmas
+            	</div>
+        	</div>
+        	</div>
+        	<div class="col-sm-3">
+        	<div class="form-group">
+                <label for="schoolholiday" class="control-label">School Holiday?</label>
+                <div class="col-sm-10">
+            		<input type="radio" name="schoolholiday" id="yes" value="1" required="required" /> Yes
+                    <input type="radio" name="schoolholiday" id="no" value="0" required="required" /> No
+                </div>
+            </div>
+            </div>
+            </div>
+		
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <button type="submit" class="btn btn-success btn-block btn-lg">Predict</button>
+                </div>
+            </div>
+        </form>
 
-     <!-- Main Input For Receiving Query to our ML -->
-    <form action="{{ url_for('predict')}}"method="post">
-    	<input type="text" name="experience" placeholder="Experience" required="required" />
-        <input type="text" name="test_score" placeholder="Test Score" required="required" />
-		<input type="text" name="interview_score" placeholder="Interview Score" required="required" />
+       <br>
+       <br>
+       <table>
+           <th>Predicted Sales</th>
+           <tr>
+               <td>{{ prediction_text }}</td>
+           </tr>
+       </table>
+       
+        </div>
+     </div>
+</div>
+    </div>
 
-        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
-    </form>
-
-   <br>
-   <br>
-   {{ prediction_text }}
-
- </div>
-
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
