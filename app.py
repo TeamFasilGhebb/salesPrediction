@@ -171,7 +171,7 @@ def predict():
     
     return render_template('index.html', prediction_text='$ {}'.format(prediction))
 
-@app.route('/data', methods=['POST'])
+@app.route('/data')
 def data():
     return render_template('roseman.html')
 
