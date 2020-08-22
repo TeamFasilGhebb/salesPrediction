@@ -34,7 +34,7 @@ The data and features description for this challenge can be found [here](https:/
 
 **Referemces**
 Reference 
-[kaggle]​(​ https://www.kaggle.com/c/rossmann-store-sales/data)
-[scikit-learn] (http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
+[kaggle]​(​https://www.kaggle.com/c/rossmann-store-sales/data)
+[scikit-learn](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
  
  
