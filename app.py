@@ -17,7 +17,7 @@ from sklearn.preprocessing import Normalizer
 app = Flask(__name__)
 model = pickle.load(open('20-08-2020-16-32-31-00-xgboost.pkl', 'rb'))
 
-store = pd.read_csv('data/store.csv')
+store = pickle.load(open('store.pkl', 'rb'))
 
 def missing_values_table(df):
     """
