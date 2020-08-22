@@ -147,7 +147,7 @@ def predict_sale(data, model):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index1.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -170,6 +170,10 @@ def predict():
     prediction = predict_sale(df, model)
     
     return render_template('index.html', prediction_text='$ {}'.format(prediction))
+
+@app.route('/data', methods=['POST'])
+def data():
+    return render_template('roseman.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
