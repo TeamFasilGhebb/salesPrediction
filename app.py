@@ -170,7 +170,3 @@ def predict():
     prediction = predict_sale(df, model)
     
     return render_template('index.html', prediction_text='$ {}'.format(prediction))
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
