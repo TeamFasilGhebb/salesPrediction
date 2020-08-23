@@ -22,12 +22,17 @@ The data and features description for this challenge can be found [here](https:/
 ### File Structure
 
 *templates*
-    A boiler folder that contains static webpages and css designs <br>
+ |   A boiler folder that contains static webpages and css designs <br>
 *procfile* used by heroku 
+
 *app.py* main python file to run prediction
-*20-08-2020-16-32-31-xgboost.pkl* a serialized xgboost model to forecast sale. Model was evaluated with a validation dataset of 3 months and has a Root Mean Squared Error of 0.18 and a confidence interval of +/- 3.5
+
+*20-08-2020-16-32-31-xgboost.pkl* a serialized xgboost model to forecast sale. Model was evaluated with a validation dataset of 3 months and has a Root Mean Squared Error of 0.18 and a confidence interval of +/- 3.5 log sale
+
 *requirement.txt*
+
 *ml_model.py* A pipeline of transformations which will be used to transform all data before generating a prediction.
+
 *Model Building.ipynb* A jupyter notebook version of *ml_model.py* More detailed and each cell is well commented and explained. Reason for Loss funtion is explained as well 
 *RossMann Pharmaceutical Store Sales (Data Analysis)* Analysis of the stores data
 
